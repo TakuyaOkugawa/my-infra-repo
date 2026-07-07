@@ -1,0 +1,46 @@
+name: 'Reusable Terraform Deploy'
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        required: true
+        type: string
+    secrets:
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      LOG_ANALYTICS_WORKSPACE_ID:
+        required: true
+      AZURE_RG_NAME:
+        required: true
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve \
+            -var="app_name=${{ inputs.app_name }}" \
+            -var="rg_name=${{ secrets.AZURE_RG_NAME }}" \
+            -var="log_analytics_workspace_id=${{ secrets.LOG_ANALYTICS_WORKSPACE_ID }}" \
+            -var='tags={"Environment":"production","ManagedBy":"Terraform","App":"${{ inputs.app_name }}"}'
