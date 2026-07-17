@@ -38,7 +38,7 @@ variable "runtime_stack" {
 # ランタイムのバージョンを指定する変数
 variable "runtime_version" {
   type    = string
-  default = "20-lts" # Pythonの場合は "3.11" など
+  default = "24-lts" # Pythonの場合は "3.11" など
 }
 
 # アプリケーションの起動コマンドを指定する変数
