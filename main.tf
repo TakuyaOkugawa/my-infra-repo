@@ -47,10 +47,15 @@ variable "app_command_line" {
   default = "npx next start" # Pythonの場合は "gunicorn --bind=0.0.0.0 --timeout 600 app:app" など
 }
 
+# タグをセット
 variable "tags" {
   type = map(string)
-  default = {
-    ManagedBy = "Terraform"
+  default = {}
+}
+
+locals {
+  common_tags = {
+    App = var.app_name
   }
 }
 
@@ -64,7 +69,7 @@ resource "azurerm_service_plan" "plan" {
   location            = "japaneast"
   os_type             = "Linux"
   sku_name            = "B1"
-  tags                = merge(var.tags, { Environment = var.app_name })
+  tags                = local.common_tags
 }
 
 resource "azurerm_linux_web_app" "app" {
@@ -72,7 +77,7 @@ resource "azurerm_linux_web_app" "app" {
   resource_group_name = local.rg_name
   location            = "japaneast"
   service_plan_id     = azurerm_service_plan.plan.id
-  tags                = merge(var.tags, { Environment = var.app_name })
+  tags                = local.common_tags
 
   site_config {
     application_stack {
@@ -89,7 +94,7 @@ resource "azurerm_application_insights" "app_ins" {
   resource_group_name = local.rg_name
   application_type    = "web"
   workspace_id        = local.log_analytics_workspace_id
-  tags                = merge(var.tags, { Environment = var.app_name })
+  tags                = local.common_tags
 }
 
 resource "azurerm_monitor_diagnostic_setting" "app_diag" {
@@ -97,10 +102,22 @@ resource "azurerm_monitor_diagnostic_setting" "app_diag" {
   target_resource_id         = azurerm_linux_web_app.app.id
   log_analytics_workspace_id = local.log_analytics_workspace_id
 
-  enabled_log { category = "AppServiceHTTPLogs" }
-  enabled_log { category = "AppServiceConsoleLogs" }
-  enabled_log { category = "AppServiceApplicationLogs" }
-  enabled_log { category = "AppServiceAccessAuditLogs" }
-  enabled_log { category = "AppServiceIPSecAuditLogs" }
-  enabled_log { category = "AppServicePlatformLogs" }
+  enabled_log {
+    category = "AppServiceHTTPLogs"
+  }
+  enabled_log {
+    category = "AppServiceConsoleLogs"
+  }
+  enabled_log {
+    category = "AppServiceAppLogs"
+  }
+  enabled_log {
+    category = "AppServiceAuditLogs"
+  }
+  enabled_log {
+    category = "AppServiceIPSecAuditLogs"
+  }
+  enabled_log {
+    category = "AppServicePlatformLogs"
+  }
 }
