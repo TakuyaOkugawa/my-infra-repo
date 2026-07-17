@@ -73,7 +73,7 @@ resource "azurerm_service_plan" "plan" {
 }
 
 resource "azurerm_linux_web_app" "app" {
-  name                = app-var.app_name
+  name                = "app-${var.app_name}"
   resource_group_name = local.rg_name
   location            = "japaneast"
   service_plan_id     = azurerm_service_plan.plan.id
