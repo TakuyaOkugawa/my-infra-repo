@@ -32,7 +32,7 @@ variable "app_name" {
 # ランタイム（Node.js, Python など）を指定する変数
 variable "runtime_stack" {
   type    = string
-  default = "node" # "node" または "python"
+  default = "node" # "node", "python" など
 }
 
 # ランタイムのバージョンを指定する変数
