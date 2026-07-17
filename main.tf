@@ -64,7 +64,7 @@ locals {
 # ==========================================
 
 resource "azurerm_service_plan" "plan" {
-  name                = "${var.app_name}-asp"
+  name                = "$asp-{var.app_name}"
   resource_group_name = local.rg_name
   location            = "japaneast"
   os_type             = "Linux"
@@ -73,23 +73,26 @@ resource "azurerm_service_plan" "plan" {
 }
 
 resource "azurerm_linux_web_app" "app" {
-  name                = var.app_name
+  name                = app-var.app_name
   resource_group_name = local.rg_name
   location            = "japaneast"
   service_plan_id     = azurerm_service_plan.plan.id
   tags                = local.common_tags
 
-  site_config {
+site_config {
     application_stack {
       node_version   = var.runtime_stack == "node" ? var.runtime_version : null
       python_version = var.runtime_stack == "python" ? var.runtime_version : null
+      java_version   = var.runtime_stack == "java" ? var.runtime_version : null
+      dotnet_version = var.runtime_stack == "dotnet" ? var.runtime_version : null
+      php_version    = var.runtime_stack == "php" ? var.runtime_version : null
+      ruby_version   = var.runtime_stack == "ruby" ? var.runtime_version : null
     }
     app_command_line = var.app_command_line
   }
-}
 
 resource "azurerm_application_insights" "app_ins" {
-  name                = "${var.app_name}-ai"
+  name                = "${var.app_name}-insights"
   location            = "japaneast"
   resource_group_name = local.rg_name
   application_type    = "web"
@@ -98,7 +101,7 @@ resource "azurerm_application_insights" "app_ins" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "app_diag" {
-  name                       = "${var.app_name}-diag"
+  name                       = "${var.app_name}-diagnostic"
   target_resource_id         = azurerm_linux_web_app.app.id
   log_analytics_workspace_id = local.log_analytics_workspace_id
 
