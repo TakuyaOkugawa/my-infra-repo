@@ -96,6 +96,7 @@ app_settings = {
     "AppServiceAgent_EXTENSION_VERSION"         = "~3"
     "XDT_MicrosoftApplicationInsights_Mode"     = "recommended"
   }
+}
 
 resource "azurerm_application_insights" "app_ins" {
   name                = "${var.app_name}-insights"
