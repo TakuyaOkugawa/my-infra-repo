@@ -64,7 +64,7 @@ locals {
 # ==========================================
 
 resource "azurerm_service_plan" "plan" {
-  name                = "$asp-{var.app_name}"
+  name                = "asp-${var.app_name}"
   resource_group_name = local.rg_name
   location            = "japaneast"
   os_type             = "Linux"
@@ -99,7 +99,7 @@ app_settings = {
 }
 
 resource "azurerm_application_insights" "app_ins" {
-  name                = "${var.app_name}-insights"
+  name                = "ai-${var.app_name}"
   location            = "japaneast"
   resource_group_name = local.rg_name
   application_type    = "web"
@@ -108,7 +108,7 @@ resource "azurerm_application_insights" "app_ins" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "app_diag" {
-  name                       = "${var.app_name}-diagnostic"
+  name                       = "${var.app_name}-diag"
   target_resource_id         = azurerm_linux_web_app.app.id
   log_analytics_workspace_id = local.log_analytics_workspace_id
 
