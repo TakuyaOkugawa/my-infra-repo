@@ -16,10 +16,10 @@ provider "azurerm" {
 # ==========================================
 locals {
   # 既存のリソースグループ名を固定
-  rg_name                    = "rg-my-existing-production" 
+  rg_name                    = "sandbox" 
   
   # 既存のLog Analytics Workspace IDを固定
-  log_analytics_workspace_id = "/subscriptions/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/rg-my-existing-production/providers/microsoft.operationalinsights/workspaces/my-existing-workspace"
+  log_analytics_workspace_id = "/subscriptions/a5d00c95-1d29-40d3-8130-5fd396638e91/resourceGroups/sandbox/providers/Microsoft.OperationalInsights/workspaces/sandbox-log-analytics"
 }
 
 # ==========================================
