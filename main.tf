@@ -91,6 +91,12 @@ site_config {
     app_command_line = var.app_command_line
   }
 
+app_settings = {
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"     = azurerm_application_insights.app_ins.connection_string
+    "AppServiceAgent_EXTENSION_VERSION"         = "~3"
+    "XDT_MicrosoftApplicationInsights_Mode"     = "recommended"
+  }
+
 resource "azurerm_application_insights" "app_ins" {
   name                = "${var.app_name}-insights"
   location            = "japaneast"
